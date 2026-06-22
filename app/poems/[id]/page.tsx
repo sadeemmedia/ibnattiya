@@ -86,9 +86,10 @@ export default async function PoemPage({
               {stanza.map((line, li) => (
                 <p
                   key={li}
-                  className={`text-lg sm:text-xl leading-relaxed ${
+                  className={`text-[0.78rem] sm:text-base md:text-lg leading-loose whitespace-nowrap overflow-x-auto ${
                     li % 2 === 0 ? "text-white/90" : "text-white/60"
                   }`}
+                  style={{ fontSize: "clamp(0.7rem, 3.2vw, 1.125rem)" }}
                 >
                   {line}
                 </p>
