@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
+import Link from "next/link";
 
 interface Poem {
   id: string;
@@ -29,14 +30,15 @@ function PoemRow({ poem }: { poem: Poem }) {
         {poem.excerpt}
       </p>
 
-      {/* زر القراءة */}
-      <button
+      {/* زر القراءة — رابط حقيقي */}
+      <Link
+        href={`/poems/${poem.id}`}
         className="text-gold/70 hover:text-gold text-sm font-medium flex items-center gap-1.5 whitespace-nowrap transition-colors group/btn"
         style={{ fontFamily: "var(--font-ibm)" }}
       >
         اقرأ القصيدة
         <span className="transition-transform group-hover/btn:-translate-x-1">›</span>
-      </button>
+      </Link>
     </div>
   );
 }
@@ -87,14 +89,15 @@ export default async function Poems() {
           ))}
         </div>
 
-        {/* ===== زر جميع القصائد ===== */}
+        {/* ===== زر جميع القصائد — رابط حقيقي ===== */}
         <div className="text-center">
-          <button
-            className="px-10 py-3 border border-gold/50 text-gold hover:bg-gold hover:text-charcoal transition-all duration-300 font-semibold"
+          <Link
+            href="/poems"
+            className="inline-block px-10 py-3 border border-gold/50 text-gold hover:bg-gold hover:text-charcoal transition-all duration-300 font-semibold"
             style={{ fontFamily: "var(--font-cairo)" }}
           >
             جميع القصائد
-          </button>
+          </Link>
         </div>
       </div>
     </section>

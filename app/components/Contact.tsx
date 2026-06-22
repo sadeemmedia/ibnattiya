@@ -12,15 +12,55 @@ export default function Contact() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [contactSent, setContactSent] = useState(false);
   const [newsletterSent, setNewsletterSent] = useState(false);
+  const [contactLoading, setContactLoading] = useState(false);
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [newsletterError, setNewsletterError] = useState("");
 
-  const handleContact = (e: React.FormEvent) => {
+  const handleContact = async (e: React.FormEvent) => {
     e.preventDefault();
-    setContactSent(true);
+    setContactLoading(true);
+    setContactError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactForm),
+      });
+      if (res.ok) {
+        setContactSent(true);
+        setContactForm({ name: "", email: "", message: "" });
+      } else {
+        setContactError("حدث خطأ، يرجى المحاولة مجدداً");
+      }
+    } catch {
+      setContactError("تعذّر الاتصال بالخادم");
+    } finally {
+      setContactLoading(false);
+    }
   };
 
-  const handleNewsletter = (e: React.FormEvent) => {
+  const handleNewsletter = async (e: React.FormEvent) => {
     e.preventDefault();
-    setNewsletterSent(true);
+    setNewsletterLoading(true);
+    setNewsletterError("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+      if (res.ok) {
+        setNewsletterSent(true);
+        setNewsletterEmail("");
+      } else {
+        setNewsletterError("حدث خطأ، يرجى المحاولة مجدداً");
+      }
+    } catch {
+      setNewsletterError("تعذّر الاتصال بالخادم");
+    } finally {
+      setNewsletterLoading(false);
+    }
   };
 
   return (
@@ -58,25 +98,33 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleNewsletter} className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="أدخل بريدك الإلكتروني"
-                  required
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="flex-1 bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
-                  style={{ fontFamily: "var(--font-ibm)" }}
-                />
-                <button
-                  type="submit"
-                  className="px-5 py-3 bg-gold text-charcoal font-bold hover:bg-gold-light transition-colors text-sm"
-                  style={{ fontFamily: "var(--font-cairo)" }}
-                  aria-label="اشتراك"
-                >
-                  ✈
-                </button>
-              </form>
+              <>
+                <form onSubmit={handleNewsletter} className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="أدخل بريدك الإلكتروني"
+                    required
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    className="flex-1 bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
+                    style={{ fontFamily: "var(--font-ibm)" }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={newsletterLoading}
+                    className="px-5 py-3 bg-gold text-charcoal font-bold hover:bg-gold-light transition-colors text-sm disabled:opacity-60"
+                    style={{ fontFamily: "var(--font-cairo)" }}
+                    aria-label="اشتراك"
+                  >
+                    {newsletterLoading ? "..." : "✈"}
+                  </button>
+                </form>
+                {newsletterError && (
+                  <p className="text-red-400/80 text-xs mt-2" style={{ fontFamily: "var(--font-ibm)" }}>
+                    {newsletterError}
+                  </p>
+                )}
+              </>
             )}
           </div>
 
@@ -107,50 +155,58 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleContact} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="الاسم"
+              <>
+                <form onSubmit={handleContact} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      placeholder="الاسم"
+                      required
+                      value={contactForm.name}
+                      onChange={(e) =>
+                        setContactForm({ ...contactForm, name: e.target.value })
+                      }
+                      className="bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
+                      style={{ fontFamily: "var(--font-ibm)" }}
+                    />
+                    <input
+                      type="email"
+                      placeholder="البريد الإلكتروني"
+                      required
+                      value={contactForm.email}
+                      onChange={(e) =>
+                        setContactForm({ ...contactForm, email: e.target.value })
+                      }
+                      className="bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
+                      style={{ fontFamily: "var(--font-ibm)" }}
+                    />
+                  </div>
+                  <textarea
+                    placeholder="رسالتك..."
                     required
-                    value={contactForm.name}
+                    rows={4}
+                    value={contactForm.message}
                     onChange={(e) =>
-                      setContactForm({ ...contactForm, name: e.target.value })
+                      setContactForm({ ...contactForm, message: e.target.value })
                     }
-                    className="bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
+                    className="w-full bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50 resize-none"
                     style={{ fontFamily: "var(--font-ibm)" }}
                   />
-                  <input
-                    type="email"
-                    placeholder="البريد الإلكتروني"
-                    required
-                    value={contactForm.email}
-                    onChange={(e) =>
-                      setContactForm({ ...contactForm, email: e.target.value })
-                    }
-                    className="bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50"
-                    style={{ fontFamily: "var(--font-ibm)" }}
-                  />
-                </div>
-                <textarea
-                  placeholder="رسالتك..."
-                  required
-                  rows={4}
-                  value={contactForm.message}
-                  onChange={(e) =>
-                    setContactForm({ ...contactForm, message: e.target.value })
-                  }
-                  className="w-full bg-white/5 border border-white/15 text-white placeholder-white/30 px-4 py-3 text-sm focus:outline-none focus:border-gold/50 resize-none"
-                  style={{ fontFamily: "var(--font-ibm)" }}
-                />
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-gold text-charcoal font-bold hover:bg-gold-light transition-colors text-sm flex items-center justify-center gap-2"
-                  style={{ fontFamily: "var(--font-cairo)" }}
-                >
-                  ✉ إرسال رسالة
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    disabled={contactLoading}
+                    className="w-full py-3 bg-gold text-charcoal font-bold hover:bg-gold-light transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                    style={{ fontFamily: "var(--font-cairo)" }}
+                  >
+                    {contactLoading ? "جارٍ الإرسال..." : "✉ إرسال رسالة"}
+                  </button>
+                </form>
+                {contactError && (
+                  <p className="text-red-400/80 text-xs mt-2" style={{ fontFamily: "var(--font-ibm)" }}>
+                    {contactError}
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>

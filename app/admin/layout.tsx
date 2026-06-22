@@ -9,6 +9,9 @@ const sidebarLinks = [
   { label: "المؤلفات", href: "/admin/books", icon: "📚" },
   { label: "القصائد", href: "/admin/poems", icon: "🪶" },
   { label: "المعرض", href: "/admin/gallery", icon: "🖼️" },
+  { label: "التعليقات", href: "/admin/reviews", icon: "💬" },
+  { label: "الرسائل", href: "/admin/messages", icon: "✉️" },
+  { label: "النشرة البريدية", href: "/admin/subscribers", icon: "📧" },
   { label: "الملف الشخصي", href: "/admin/profile", icon: "👤" },
 ];
 

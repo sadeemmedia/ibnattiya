@@ -66,6 +66,33 @@ export default async function DashboardPage() {
     galleryCount = gallery.length;
   } catch {}
 
+  let messagesCount = 0;
+  let unreadCount = 0;
+  let subscribersCount = 0;
+  let reviewsCount = 0;
+
+  try {
+    const msgs = JSON.parse(
+      await readFile(join(process.cwd(), "data", "messages.json"), "utf-8")
+    ) as { read: boolean }[];
+    messagesCount = msgs.length;
+    unreadCount = msgs.filter((m) => !m.read).length;
+  } catch {}
+
+  try {
+    const subs = JSON.parse(
+      await readFile(join(process.cwd(), "data", "subscribers.json"), "utf-8")
+    );
+    subscribersCount = subs.length;
+  } catch {}
+
+  try {
+    const revs = JSON.parse(
+      await readFile(join(process.cwd(), "data", "reviews.json"), "utf-8")
+    );
+    reviewsCount = revs.length;
+  } catch {}
+
   return (
     <div className="p-8">
       {/* رأس الصفحة */}
@@ -85,25 +112,18 @@ export default async function DashboardPage() {
       </div>
 
       {/* بطاقات الإحصائيات */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+        <StatCard icon="📚" label="المؤلفات" value={booksCount} color="border-[#C8A46B]/20" />
+        <StatCard icon="🪶" label="القصائد" value={poemsCount} color="border-blue-500/20" />
+        <StatCard icon="🖼️" label="المعرض" value={galleryCount} color="border-green-500/20" />
+        <StatCard icon="💬" label="التعليقات" value={reviewsCount} color="border-purple-500/20" />
         <StatCard
-          icon="📚"
-          label="عدد المؤلفات"
-          value={booksCount}
-          color="border-[#C8A46B]/20"
+          icon="✉️"
+          label={unreadCount > 0 ? `رسائل (${unreadCount} جديد)` : "الرسائل"}
+          value={messagesCount}
+          color="border-orange-500/20"
         />
-        <StatCard
-          icon="🪶"
-          label="عدد القصائد"
-          value={poemsCount}
-          color="border-blue-500/20"
-        />
-        <StatCard
-          icon="🖼️"
-          label="صور المعرض"
-          value={galleryCount}
-          color="border-green-500/20"
-        />
+        <StatCard icon="📧" label="المشتركون" value={subscribersCount} color="border-teal-500/20" />
       </div>
 
       {/* روابط الإجراءات السريعة */}
@@ -114,11 +134,14 @@ export default async function DashboardPage() {
         >
           الإجراءات السريعة
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
           {[
             { label: "إضافة مؤلف", href: "/admin/books", icon: "➕" },
             { label: "إضافة قصيدة", href: "/admin/poems", icon: "✍️" },
             { label: "رفع صورة", href: "/admin/gallery", icon: "📸" },
+            { label: "التعليقات", href: "/admin/reviews", icon: "💬" },
+            { label: "الرسائل", href: "/admin/messages", icon: "✉️" },
+            { label: "المشتركون", href: "/admin/subscribers", icon: "📧" },
             { label: "تعديل الملف", href: "/admin/profile", icon: "✏️" },
           ].map((action) => (
             <a
