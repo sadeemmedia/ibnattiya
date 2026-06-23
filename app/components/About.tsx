@@ -74,10 +74,10 @@ export default async function About() {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-10 items-start">
+        <div className="max-w-3xl">
 
           {/* ===== النص التعريفي ===== */}
-          <div className="lg:col-span-2">
+          <div>
             <div
               className="text-[#3D2E1E] text-base lg:text-lg leading-[2] space-y-5"
               style={{ fontFamily: "var(--font-ibm)" }}
@@ -87,28 +87,8 @@ export default async function About() {
               ))}
             </div>
 
-            <div className="mt-10">
-              <a
-                href="#books"
-                className="inline-flex items-center gap-2 px-7 py-3 bg-dark-brown text-gold font-semibold hover:bg-[#3D2E1E] transition-colors duration-300 text-sm"
-                style={{ fontFamily: "var(--font-cairo)" }}
-              >
-                المزيد عن الشاعر
-              </a>
-            </div>
           </div>
 
-          {/* ===== بطاقة المعلومات الجانبية ===== */}
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-100">
-            {infoItems.map((item) => (
-              <InfoCard
-                key={item.label}
-                icon={item.icon}
-                label={item.label}
-                value={item.value}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </section>
