@@ -11,7 +11,6 @@ const navLinks = [
   { label: "مؤلفاتي", href: "#books" },
   { label: "المختارات الشعرية", href: "#poems" },
   { label: "آراء الزوار", href: "#reviews" },
-  { label: "تواصل معي", href: "#contact" },
 ];
 
 export default function Navbar() {
