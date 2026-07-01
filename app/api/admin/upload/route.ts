@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
     }
 
     /* التحقق من نوع الملف */
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
       return Response.json(
-        { error: "نوع الملف غير مدعوم. الأنواع المدعومة: JPG, PNG, WEBP" },
+        { error: "نوع الملف غير مدعوم. الأنواع المدعومة: JPG, JPEG, PNG, WEBP" },
         { status: 400 }
       );
     }

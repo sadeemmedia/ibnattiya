@@ -7,7 +7,6 @@ import Books from "./components/Books";
 import Poems from "./components/Poems";
 import Gallery from "./components/Gallery";
 import Reviews from "./components/Reviews";
-import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
 /* تعطيل التخزين المؤقت لضمان قراءة البيانات المحدّثة دائماً */
@@ -33,7 +32,6 @@ export default async function HomePage() {
       <Poems />
       <Gallery images={galleryImages} />
       <Reviews />
-      <Contact />
       <Footer />
     </main>
   );
